@@ -1,0 +1,88 @@
+<html>
+<head>
+<title>SimplinoCA :: Certificate</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="initial-scale=1.0">
+<meta name="viewport" content="maximum-scale=1.0">
+<meta name="viewport" content="user-scalable=no">
+<meta name="viewport" content="width=device-width">
+<script language="Javascript">
+   function refreshlock(cb1, cb2, cookieName) {
+        var hash = window.location.hash
+        if ( !hash ) {
+            window.location.hash = cookieName;
+            cb1(); 
+        } else {
+            cb2();
+        }
+    }
+    
+    function mc() {
+    if (true || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i)) {
+        document.location.href = "SimplinoCA_2.cer";
+      
+      setTimeout(postmc, 3000);
+    } else {
+      alert('Not an iPhone, skipping certificate install.');
+      postmc();
+    }
+  }
+
+  var LOCK = 'activate';
+  var CALLBACK = '';
+    
+  function go() 
+  {
+    document.location.href = CALLBACK;
+  }
+
+  function postmc()
+  {
+      var messageDIV = document.getElementById("message");
+      if ( messageDIV )
+          messageDIV.innerHTML="SimplinoCA cert was installed.<br/>You can safely close this page."
+      
+      if (document.activeElement != document.body)
+        setTimeout(postmc, 10);
+      else // Wait a bit in order to make sure the 3G connection has time to reconnect
+        setTimeout(go, 200);
+  }
+
+  function loaded() 
+  {
+    var s = window.location.search;
+    
+    LOCK = s.match(/ts=(.+?)([\&]|$)/);
+    CALLBACK = s.match(/cb=(.+?)([\&]|$)/);
+      
+    if ( LOCK )
+      LOCK = LOCK[1];
+    else
+      LOCK = 'activate';
+      
+    if ( CALLBACK )
+      CALLBACK = decodeURIComponent(CALLBACK[1]);
+    else
+    {
+        alert("Callback url is not specified");
+        return;
+    }
+      
+    setTimeout(function(){refreshlock(mc, postmc, LOCK)}, 100)
+  }
+
+</script>
+    <style type="text/css">
+        body {background:#f2f2f2; font-family:Helvetica, Arial; font-size:16px; font-weight:bold; color:#a4a4a4; margin:0; padding:0; -webkit-touch-callout: none; -webkit-user-select: none;}
+        .b {position:absolute; top:50%; left: 50%; margin-left:-150px; margin-top:-100px;}
+        .a {display:table-cell; padding:0; margin:0; width: 300px; height: 200px; vertical-align:middle; text-align:center; text-shadow: 0 1px 0 rgba(255,255,255,1);
+        }
+    </style>
+</head>
+<body onLoad="setTimeout(loaded, 100)">
+    <div class="b">
+        <div class="a" id="message">Installing SimplinoCA certificate...</div>
+    </div>
+</body>
+</html>
